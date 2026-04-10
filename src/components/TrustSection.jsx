@@ -23,7 +23,7 @@ export default function TrustSection() {
               </p>
            </div>
            
-           <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
+           <div className="grid grid-cols-2" style={{ gap: '1rem' }}>
              <div className="glass-card" style={{ padding: '2rem', textAlign: 'center' }}>
                <h3 style={{ fontSize: '3.5rem', color: 'var(--brand-cyan)', marginBottom: '0.5rem', lineHeight: 1 }}>100%</h3>
                <h4 style={{ color: 'var(--text-main)', fontSize: '1rem', fontWeight: 400 }}>Fokus auf KFZ & Handwerk</h4>

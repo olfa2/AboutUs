@@ -167,7 +167,7 @@ export default function ContactSection() {
               </motion.div>
             ) : (
               <form onSubmit={handleSubmit} noValidate style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem', position: 'relative' }}>
-                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1.5rem' }}>
+                <div className="grid grid-cols-2" style={{ gap: '1.5rem' }}>
                   <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem', position: 'relative' }}>
                     <label style={{ fontSize: '0.875rem', fontWeight: 600, color: 'var(--text-muted)' }}>Name / Werkstatt</label>
                     <input type="text" name="name" value={formData.name} onChange={handleChange} style={{ background: 'rgba(255,255,255,0.03)', border: `1px solid ${errors.name ? '#ef4444' : 'var(--border-glass)'}`, padding: '1rem', borderRadius: '8px', color: '#fff', fontSize: '1rem', outline: 'none', transition: 'border-color 0.2s' }} />

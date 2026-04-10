@@ -2,7 +2,7 @@ import { motion } from 'framer-motion';
 
 export default function Hero() {
   return (
-    <section className="section text-center" style={{ display: 'flex', alignItems: 'center', paddingTop: '150px', paddingBottom: '40px' }}>
+    <section className="section text-center hero-section" style={{ display: 'flex', alignItems: 'center' }}>
       <div className="bg-mesh"></div>
       
       <div className="container" style={{ maxWidth: '900px', position: 'relative', zIndex: 10 }}>

@@ -62,7 +62,7 @@ export default function SocialProofSection() {
         >
            <h3 style={{ fontSize: '1.5rem', color: '#fff', textAlign: 'center', marginBottom: '2rem' }}>Kunden-Fallbeispiel: Autohaus Meier</h3>
            
-           <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '2rem' }}>
+           <div className="grid grid-cols-2" style={{ gap: '2rem' }}>
               <div style={{ background: 'rgba(239, 68, 68, 0.05)', border: '1px solid rgba(239, 68, 68, 0.2)', padding: '1.5rem', borderRadius: '12px' }}>
                  <strong style={{ display: 'block', color: '#ef4444', marginBottom: '0.5rem', fontSize: '1.25rem' }}>VORHER</strong>
                  <p style={{ color: 'var(--text-muted)', margin: 0 }}>15 Jahre alte Website, Kunden fanden die Telefonnummer auf dem Smartphone nicht.</p>
