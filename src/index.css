@@ -1,0 +1,24 @@
+@import "tailwindcss";
+
+@custom-variant dark (&:is(.dark *));
+
+@layer base {
+  button:focus-visible, a:focus-visible, input:focus-visible, select:focus-visible, textarea:focus-visible {
+    @apply outline-none ring-2 ring-teal-500 ring-offset-2 ring-offset-white dark:ring-offset-gray-950;
+  }
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+@layer theme {
+  :root {
+    --color-neon-teal: #00f0ff;
+    --color-cyber-green: #39ff14;
+  }
+}
+
+body {
+  @apply bg-gray-50 text-gray-900 dark:bg-gray-950 dark:text-gray-100;
+}

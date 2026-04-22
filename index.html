@@ -1,0 +1,41 @@
+<!doctype html>
+<html lang="de">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    
+    <!-- SEO & Meta Tags -->
+    <title>NexoraStudios | Premium Webentwicklung & Design Agentur</title>
+    <meta name="description" content="Wir entwickeln hochkonvertierende Premium-Websites und Web-Apps für B2B-Unternehmen. Skalieren Sie Ihren Umsatz mit NexoraStudios." />
+    <meta name="theme-color" content="#030712" media="(prefers-color-scheme: dark)" />
+    <meta name="theme-color" content="#f9fafb" media="(prefers-color-scheme: light)" />
+    
+    <!-- Open Graph / Social Media -->
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://nexorastudios.de/" />
+    <meta property="og:title" content="NexoraStudios | Premium Webentwicklung & Design Agentur" />
+    <meta property="og:description" content="Wir entwickeln hochkonvertierende Premium-Websites und Web-Apps für B2B-Unternehmen. Skalieren Sie Ihren Umsatz mit NexoraStudios." />
+    
+    <!-- Twitter Cards -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="NexoraStudios | Premium Webentwicklung" />
+    <meta name="twitter:description" content="Skalieren Sie Ihren Umsatz mit einer hochkonvertierenden Premium-Website von NexoraStudios." />
+    <script>
+      // Prevent Flash of Unstyled Content (FOUC) for Dark Mode
+      if (localStorage.getItem('theme') === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+        document.documentElement.classList.add('dark');
+      } else if (localStorage.getItem('theme') === 'light') {
+        document.documentElement.classList.remove('dark');
+      } else {
+        // Default to dark mode for our agency theme
+        document.documentElement.classList.add('dark');
+        localStorage.setItem('theme', 'dark');
+      }
+    </script>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.jsx"></script>
+  </body>
+</html>
