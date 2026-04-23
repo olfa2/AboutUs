@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { 
   Zap, Code, PenTool, Rocket, 
-  ChevronRight, Star, Menu, X, Activity,
+  ChevronRight, ChevronDown, Star, Menu, X, Activity,
   Users, TrendingUp, ShieldCheck, Target, CheckCircle,
   Send, Loader2, Sun, Moon
 } from 'lucide-react';
@@ -38,6 +38,8 @@ export default function App() {
   // Modal State
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [formState, setFormState] = useState('idle'); // idle, loading, success
+  const [ziel, setZiel] = useState("");
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const nameInputRef = useRef(null);
 
   useEffect(() => {
@@ -76,6 +78,8 @@ export default function App() {
         if (e.key === 'Escape') {
           setIsModalOpen(false);
           setFormState('idle');
+          setZiel("");
+          setIsDropdownOpen(false);
         }
       };
       window.addEventListener('keydown', handleKeyDown);
@@ -172,7 +176,7 @@ export default function App() {
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
               className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/40 dark:bg-black/60 backdrop-blur-sm"
-              onClick={() => { setIsModalOpen(false); setFormState('idle'); }}
+              onClick={() => { setIsModalOpen(false); setFormState('idle'); setZiel(""); setIsDropdownOpen(false); }}
             >
               <motion.div 
                 initial={{ opacity: 0, scale: 0.95, y: 20 }}
@@ -182,7 +186,7 @@ export default function App() {
                 className="bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-3xl w-full max-w-2xl overflow-hidden shadow-2xl relative"
               >
                 <button 
-                  onClick={() => { setIsModalOpen(false); setFormState('idle'); }}
+                  onClick={() => { setIsModalOpen(false); setFormState('idle'); setZiel(""); setIsDropdownOpen(false); }}
                   className="absolute top-4 right-4 md:top-6 md:right-6 text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white transition-colors z-10"
                 >
                   <X size={24} />
@@ -223,7 +227,7 @@ export default function App() {
                     </div>
                   ) : (
                     <>
-                      <h3 className="text-3xl font-bold text-gray-900 dark:text-white mb-2">Lassen Sie uns skalieren.</h3>
+                      <h3 className="text-3xl font-bold text-gray-900 dark:text-white mb-2">Bereit für Ihren professionellen Online-Auftritt?</h3>
                       <p className="text-gray-600 dark:text-gray-400 mb-8 text-lg">Hinterlassen Sie uns ein paar Eckdaten zu Ihrem Projekt. Kein Spam, nur Business.</p>
                       
                       <form onSubmit={handleFormSubmit} className="space-y-6">
@@ -238,30 +242,91 @@ export default function App() {
                           </div>
                         </div>
 
-                        <div className="space-y-2">
-                          <label className="text-sm font-semibold text-gray-700 dark:text-gray-300">Geplantes Projekt-Budget</label>
-                          <select required name="budget" defaultValue="" className="w-full bg-gray-50 dark:bg-gray-950 border border-gray-200 dark:border-gray-800 rounded-xl px-4 py-3 text-gray-900 dark:text-white focus:outline-none focus:border-teal-500 focus:ring-1 focus:ring-teal-500 transition-all appearance-none cursor-pointer">
-                            <option value="" disabled>Bitte realistisch einschätzen...</option>
-                            <option value="startup">1.500€ - 3.000€ (Startups & Landingpages)</option>
-                            <option value="corporate">3.000€ - 7.500€ (Corporate & Relaunches)</option>
-                            <option value="enterprise">Ab 7.500€ (Web-Apps & E-Commerce)</option>
-                          </select>
+                        <div className="space-y-2 relative z-20">
+                          <label className="text-sm font-semibold text-gray-700 dark:text-gray-300">Was ist Ihr aktuelles Ziel?</label>
+                          
+                          <div 
+                            onClick={() => setIsDropdownOpen(!isDropdownOpen)}
+                            className={`w-full flex items-center justify-between bg-gray-50 dark:bg-gray-950 border ${isDropdownOpen ? 'border-teal-500 ring-1 ring-teal-500' : 'border-gray-200 dark:border-gray-800'} rounded-xl px-4 py-3 cursor-pointer transition-all group hover:border-teal-400`}
+                          >
+                            <div className="flex flex-col">
+                              <span className={ziel ? "text-gray-900 dark:text-white font-medium text-sm" : "text-gray-400 dark:text-gray-700 text-sm"}>
+                                {ziel === "neue_website" ? "Komplett neue Website" : 
+                                 ziel === "modernisierung" ? "Bestehende Website modernisieren" : 
+                                 ziel === "beratung" ? "Wir sind uns unsicher" : "Bitte auswählen..."}
+                              </span>
+                              {ziel && (
+                                <span className="text-xs text-teal-600 dark:text-teal-500 mt-0.5">
+                                  {ziel === "neue_website" ? "Startpaket für 599 €" : 
+                                   ziel === "modernisierung" ? "Individuelles Angebot" : "Kostenlose Erstberatung"}
+                                </span>
+                              )}
+                            </div>
+                            <div className={`w-8 h-8 rounded-lg flex items-center justify-center transition-colors ${isDropdownOpen ? 'bg-teal-100 dark:bg-teal-500/20 text-teal-600 dark:text-teal-400' : 'bg-gray-100 dark:bg-gray-900 text-gray-400 group-hover:text-teal-500'}`}>
+                              <ChevronDown size={18} className={`transition-transform duration-300 ${isDropdownOpen ? 'rotate-180' : ''}`} />
+                            </div>
+                          </div>
+
+                          <AnimatePresence>
+                            {isDropdownOpen && (
+                              <>
+                                <div className="fixed inset-0 z-10" onClick={() => setIsDropdownOpen(false)}></div>
+                                <motion.div 
+                                  initial={{ opacity: 0, y: -10, scale: 0.98 }}
+                                  animate={{ opacity: 1, y: 0, scale: 1 }}
+                                  exit={{ opacity: 0, y: -10, scale: 0.98 }}
+                                  transition={{ duration: 0.2 }}
+                                  className="absolute w-full mt-2 bg-white dark:bg-gray-900 border border-gray-100 dark:border-gray-800 rounded-xl shadow-2xl z-30 overflow-hidden"
+                                >
+                                  {[
+                                    { id: "neue_website", title: "Komplett neue Website", desc: "Startpaket für 599 €" },
+                                    { id: "modernisierung", title: "Bestehende Website modernisieren", desc: "Individuelles Angebot" },
+                                    { id: "beratung", title: "Wir sind uns unsicher", desc: "Kostenlose Erstberatung" }
+                                  ].map((option) => (
+                                    <div 
+                                      key={option.id}
+                                      onClick={() => {
+                                        setZiel(option.id);
+                                        setIsDropdownOpen(false);
+                                      }}
+                                      className={`px-4 py-3 cursor-pointer transition-colors border-l-2 relative overflow-hidden group ${ziel === option.id ? 'border-teal-500 bg-teal-50/50 dark:bg-teal-500/10' : 'border-transparent hover:bg-gray-50 dark:hover:bg-gray-800/50'}`}
+                                    >
+                                      <div className={`font-semibold text-sm transition-colors ${ziel === option.id ? 'text-teal-600 dark:text-teal-400' : 'text-gray-900 dark:text-white group-hover:text-teal-500 dark:group-hover:text-teal-400'}`}>{option.title}</div>
+                                      <div className="text-xs text-gray-500 dark:text-gray-400 mt-0.5">{option.desc}</div>
+                                    </div>
+                                  ))}
+                                </motion.div>
+                              </>
+                            )}
+                          </AnimatePresence>
+                          
+                          {/* Hidden input for HTML5 required validation */}
+                          <input type="text" name="ziel" value={ziel} onChange={() => {}} required className="absolute opacity-0 w-0 h-0" tabIndex={-1} />
                         </div>
 
-                        <div className="space-y-2">
-                          <label className="text-sm font-semibold text-gray-700 dark:text-gray-300">Worum geht es?</label>
-                          <textarea required name="message" rows="3" placeholder="Kurze Beschreibung Ihrer aktuellen Herausforderung..." className="w-full bg-gray-50 dark:bg-gray-950 border border-gray-200 dark:border-gray-800 rounded-xl px-4 py-3 text-gray-900 dark:text-white focus:outline-none focus:border-teal-500 focus:ring-1 focus:ring-teal-500 transition-all placeholder:text-gray-400 dark:placeholder:text-gray-700 resize-none"></textarea>
-                        </div>
+                        <AnimatePresence>
+                          {ziel === "modernisierung" && (
+                            <motion.div 
+                              initial={{ opacity: 0, height: 0, marginTop: 0 }}
+                              animate={{ opacity: 1, height: 'auto', marginTop: 24 }}
+                              exit={{ opacity: 0, height: 0, marginTop: 0 }}
+                              className="space-y-2 overflow-hidden"
+                            >
+                              <label className="text-sm font-semibold text-gray-700 dark:text-gray-300">Link zur aktuellen Website (Optional)</label>
+                              <input name="website_link" type="text" placeholder="www.ihre-website.de" className="w-full bg-gray-50 dark:bg-gray-950 border border-gray-200 dark:border-gray-800 rounded-xl px-4 py-3 text-gray-900 dark:text-white focus:outline-none focus:border-teal-500 focus:ring-1 focus:ring-teal-500 transition-all placeholder:text-gray-400 dark:placeholder:text-gray-700" />
+                            </motion.div>
+                          )}
+                        </AnimatePresence>
 
                         <button 
                           disabled={formState === 'loading'}
                           type="submit" 
-                          className="w-full bg-teal-500 hover:bg-teal-400 text-gray-950 py-4 rounded-xl font-bold transition-all flex items-center justify-center gap-2 text-lg shadow-[0_0_20px_rgba(20,184,166,0.2)] hover:shadow-[0_0_30px_rgba(20,184,166,0.4)] disabled:opacity-70 disabled:cursor-not-allowed"
+                          className="w-full bg-teal-500 hover:bg-teal-400 text-gray-950 py-4 rounded-xl font-bold transition-all flex items-center justify-center gap-2 text-lg shadow-[0_0_20px_rgba(20,184,166,0.2)] hover:shadow-[0_0_30px_rgba(20,184,166,0.4)] disabled:opacity-70 disabled:cursor-not-allowed mt-8"
                         >
                           {formState === 'loading' ? (
                             <><Loader2 size={20} className="animate-spin text-gray-950" /> Anfrage wird gesendet...</>
                           ) : (
-                            <>Potenzialanalyse anfragen <Send size={20} /></>
+                            <>Jetzt unverbindlich anfragen <Send size={20} /></>
                           )}
                         </button>
                       </form>
@@ -375,42 +440,40 @@ export default function App() {
               initial="hidden" animate="visible" variants={fadeIn}
               className="relative z-10"
             >
-              <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-teal-50 dark:bg-teal-500/10 border border-teal-200 dark:border-teal-500/20 text-teal-600 dark:text-teal-400 text-xs font-bold uppercase tracking-wider mb-6 shadow-[0_0_15px_rgba(20,184,166,0.1)]">
+              <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-sm bg-teal-50 dark:bg-teal-500/10 border border-teal-200 dark:border-teal-500/20 text-teal-600 dark:text-teal-400 text-xs font-bold uppercase tracking-wider mb-6">
                 <Activity size={14} />
-                <span>Die Conversion-Agentur</span>
+                <span>Nicht für Design-Awards</span>
               </div>
               
-              <h1 className="text-4xl md:text-5xl lg:text-7xl font-extrabold tracking-tight mb-6 leading-[1.1] text-gray-900 dark:text-white">
-                Mehr Traffic. <br />
+              <h1 className="text-4xl md:text-5xl lg:text-7xl font-extrabold tracking-tight mb-6 leading-[1.05] text-gray-900 dark:text-white uppercase">
+                Ihr Webauftritt verbrennt Budget. <br />
                 <span className="text-transparent bg-clip-text bg-gradient-to-r from-teal-500 to-emerald-600 dark:from-teal-400 dark:to-emerald-500">
-                  Mehr Kunden.
+                  Wir ändern das.
                 </span>
               </h1>
               
               <p className="text-xl text-gray-600 dark:text-gray-300 mb-8 leading-relaxed max-w-xl font-medium">
-                Verlieren Sie keine Kunden mehr durch langsame, veraltete Websites. 
-                Wir entwickeln Premium-Weblösungen, die Vertrauen aufbauen, 
-                rasant laden und Besucher in zahlende Kunden verwandeln.
+                Kein Bullshit, kein "Vibe-Design". Wir programmieren rasante Web-Lösungen, die exakt eine Aufgabe haben: Ihre Conversion-Rate messbar nach oben zu skalieren.
               </p>
 
               <div className="flex flex-wrap gap-4 mb-10">
                 <div className="flex items-center gap-2 text-sm font-semibold text-gray-700 dark:text-gray-400">
                   <CheckCircle size={16} className="text-teal-500 dark:text-teal-400" />
-                  Messbarer ROI
+                  Daten statt Bauchgefühl
                 </div>
                 <div className="flex items-center gap-2 text-sm font-semibold text-gray-700 dark:text-gray-400">
                   <CheckCircle size={16} className="text-teal-500 dark:text-teal-400" />
-                  Premium Design
+                  Sub-0.5s Ladezeiten
                 </div>
                 <div className="flex items-center gap-2 text-sm font-semibold text-gray-700 dark:text-gray-400">
                   <CheckCircle size={16} className="text-teal-500 dark:text-teal-400" />
-                  Top-Platzierungen bei Google
+                  A/B-getestete Layouts
                 </div>
               </div>
 
               <div className="flex flex-wrap gap-4">
-                <button onClick={() => setIsModalOpen(true)} className="bg-teal-500 hover:bg-teal-400 text-gray-950 px-8 py-4 rounded-xl font-bold transition-all shadow-[0_0_20px_rgba(20,184,166,0.3)] hover:shadow-[0_0_30px_rgba(20,184,166,0.5)] flex items-center gap-2 text-lg">
-                  Projekt anfragen <ChevronRight size={20} />
+                <button onClick={() => setIsModalOpen(true)} className="bg-teal-500 hover:bg-teal-400 text-gray-950 px-8 py-4 rounded-none border border-teal-400 font-bold transition-all shadow-[4px_4px_0px_rgba(20,184,166,0.3)] hover:shadow-[6px_6px_0px_rgba(20,184,166,0.5)] flex items-center gap-2 text-lg hover:-translate-y-0.5 hover:-translate-x-0.5">
+                  Engpässe identifizieren <ChevronRight size={20} />
                 </button>
               </div>
             </motion.div>
@@ -422,37 +485,36 @@ export default function App() {
               transition={{ duration: 0.8, delay: 0.2 }}
               className="relative perspective-1000 z-10"
             >
-              <div className="absolute inset-0 bg-gradient-to-tr from-teal-500/10 dark:from-teal-500/20 to-transparent blur-2xl rounded-3xl -z-10 transform-gpu"></div>
-              <div className={`bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-2xl p-6 md:p-8 shadow-2xl backdrop-blur-sm relative overflow-hidden ${isMounted ? 'transition-colors duration-500' : ''}`}>
-                <div className="absolute top-0 right-0 w-32 h-32 bg-teal-500/5 dark:bg-teal-500/10 rounded-bl-full transform-gpu"></div>
+              <div className="absolute inset-0 bg-gradient-to-tr from-teal-500/10 dark:from-teal-500/20 to-transparent blur-2xl -z-10 transform-gpu"></div>
+              <div className={`bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-none p-6 md:p-8 shadow-[8px_8px_0px_rgba(0,0,0,0.1)] dark:shadow-[8px_8px_0px_rgba(0,0,0,0.5)] relative overflow-hidden ${isMounted ? 'transition-colors duration-500' : ''}`}>
                 
                 <div className="flex justify-between items-start mb-8">
                   <div>
-                    <h3 className="text-gray-900 dark:text-white font-semibold text-lg flex items-center gap-2">
+                    <h3 className="text-gray-900 dark:text-white font-semibold text-lg flex items-center gap-2 font-mono">
                       <Zap className="text-teal-500 dark:text-teal-400" size={20} /> Performance Audit
                     </h3>
-                    <p className="text-gray-500 dark:text-gray-400 text-sm mt-1">Garantierte Bestwerte für SEO & Conversion</p>
+                    <p className="text-gray-500 dark:text-gray-400 text-sm mt-1">Harte Fakten statt "schönes Design"</p>
                   </div>
-                  <div className="bg-teal-50 dark:bg-teal-500/10 text-teal-600 dark:text-teal-400 px-3 py-1 rounded-full text-xs font-bold border border-teal-200 dark:border-teal-500/20">
-                    REAL-TIME
+                  <div className="bg-teal-50 dark:bg-teal-500/10 text-teal-600 dark:text-teal-400 px-3 py-1 text-xs font-bold border border-teal-200 dark:border-teal-500/20 uppercase tracking-widest font-mono">
+                    Real-Time
                   </div>
                 </div>
 
                 <div className="flex justify-center mb-10">
                   <div className="relative w-40 h-40">
                     <svg className="w-full h-full transform -rotate-90" viewBox="0 0 100 100">
-                      <circle cx="50" cy="50" r="45" className="stroke-gray-100 dark:stroke-gray-800 fill-none stroke-[8]"></circle>
+                      <circle cx="50" cy="50" r="45" className="stroke-gray-100 dark:stroke-gray-800 fill-none stroke-[4]"></circle>
                       <motion.circle 
                         initial={{ strokeDasharray: "0 300" }}
                         animate={{ strokeDasharray: "283 300" }}
                         transition={{ duration: 1.5, delay: 0.5, ease: "easeOut" }}
                         cx="50" cy="50" r="45" 
-                        className="stroke-teal-500 dark:stroke-teal-400 fill-none stroke-[8] drop-shadow-[0_0_8px_rgba(45,212,191,0.5)] dark:drop-shadow-[0_0_8px_rgba(45,212,191,0.8)]"
+                        className="stroke-teal-500 dark:stroke-teal-400 fill-none stroke-[4] drop-shadow-[0_0_8px_rgba(45,212,191,0.5)] dark:drop-shadow-[0_0_8px_rgba(45,212,191,0.8)]"
                         strokeLinecap="round"
                       ></motion.circle>
                     </svg>
                     <div className="absolute inset-0 flex flex-col items-center justify-center">
-                      <span className="text-5xl font-extrabold text-gray-900 dark:text-white">100</span>
+                      <span className="text-5xl font-extrabold text-gray-900 dark:text-white font-mono">99</span>
                       <span className="text-xs text-teal-600 dark:text-teal-400 font-bold tracking-widest mt-1">SCORE</span>
                     </div>
                   </div>
@@ -460,12 +522,12 @@ export default function App() {
 
                 <div className="space-y-4">
                   {[
-                    { label: "Ladezeit (FCP)", value: "< 0.4s", color: "text-teal-600 dark:text-teal-400" },
-                    { label: "Google Core Web Vitals", value: "Bestanden", color: "text-teal-600 dark:text-teal-400" },
-                    { label: "Mobile Usability", value: "Exzellent", color: "text-teal-600 dark:text-teal-400" }
+                    { label: "Ladezeit (FCP)", value: "0.4s", color: "text-teal-600 dark:text-teal-400" },
+                    { label: "DOM Size", value: "< 400", color: "text-teal-600 dark:text-teal-400" },
+                    { label: "Layout Shift", value: "0.00", color: "text-teal-600 dark:text-teal-400" }
                   ].map((metric, i) => (
-                    <div key={i} className="flex justify-between items-center p-3 rounded-lg bg-gray-50 dark:bg-gray-950/50 border border-gray-100 dark:border-gray-800/50">
-                      <span className="text-gray-600 dark:text-gray-300 text-sm font-medium">{metric.label}</span>
+                    <div key={i} className="flex justify-between items-center p-3 border-b border-gray-100 dark:border-gray-800/50 last:border-0">
+                      <span className="text-gray-600 dark:text-gray-300 text-sm font-medium font-mono">{metric.label}</span>
                       <span className={`font-mono font-bold ${metric.color}`}>{metric.value}</span>
                     </div>
                   ))}
@@ -479,40 +541,40 @@ export default function App() {
         <section id="vorteile" className="py-24 bg-white dark:bg-gray-900/30 border-y border-gray-200 dark:border-gray-800">
           <div className="max-w-7xl mx-auto px-6 lg:px-8">
             <div className="text-center mb-16">
-              <h2 className="text-3xl md:text-5xl font-bold mb-4 text-gray-900 dark:text-white">Warum <span className="text-teal-500 dark:text-teal-400">NexoraStudios?</span></h2>
+              <h2 className="text-3xl md:text-5xl font-bold mb-4 text-gray-900 dark:text-white uppercase tracking-tight">Warum <span className="text-teal-500 dark:text-teal-400">Nexora?</span></h2>
               <p className="text-gray-600 dark:text-gray-400 max-w-2xl mx-auto text-lg">
-                Wir betrachten Webdesign nicht als Kunstprojekt, sondern als Ihr stärkstes Vertriebswerkzeug.
+                Weil schöne Bilder allein nichts verkaufen.
               </p>
             </div>
 
             <div className="grid md:grid-cols-3 gap-8">
-              <motion.div whileHover={{ y: -5 }} className="bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-800 p-8 rounded-2xl relative overflow-hidden group transition-colors duration-500">
-                <div className="w-14 h-14 bg-teal-100 dark:bg-teal-500/10 rounded-xl flex items-center justify-center text-teal-600 dark:text-teal-400 mb-6 border border-teal-200 dark:border-teal-500/20 group-hover:bg-teal-500 group-hover:text-white dark:group-hover:text-gray-950 transition-colors">
+              <motion.div whileHover={{ y: -5 }} className="bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-800 p-8 rounded-none relative group transition-colors duration-500 shadow-[4px_4px_0px_rgba(0,0,0,0.05)] dark:shadow-[4px_4px_0px_rgba(0,0,0,0.3)] hover:shadow-[8px_8px_0px_rgba(20,184,166,0.2)]">
+                <div className="w-14 h-14 bg-teal-100 dark:bg-teal-500/10 rounded-none flex items-center justify-center text-teal-600 dark:text-teal-400 mb-6 border border-teal-200 dark:border-teal-500/20 group-hover:bg-teal-500 group-hover:text-white dark:group-hover:text-gray-950 transition-colors">
+                  <Activity size={28} />
+                </div>
+                <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-3 font-mono tracking-tight">Daten statt Bauchgefühl</h3>
+                <p className="text-gray-600 dark:text-gray-400 leading-relaxed">
+                  Wir raten nicht, welche Layouts konvertieren. Wir stützen Design-Entscheidungen auf A/B-Tests, Heatmaps und Verhaltenspsychologie.
+                </p>
+              </motion.div>
+
+              <motion.div whileHover={{ y: -5 }} className="bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-800 p-8 rounded-none relative group transition-colors duration-500 shadow-[4px_4px_0px_rgba(0,0,0,0.05)] dark:shadow-[4px_4px_0px_rgba(0,0,0,0.3)] hover:shadow-[8px_8px_0px_rgba(20,184,166,0.2)]">
+                <div className="w-14 h-14 bg-teal-100 dark:bg-teal-500/10 rounded-none flex items-center justify-center text-teal-600 dark:text-teal-400 mb-6 border border-teal-200 dark:border-teal-500/20 group-hover:bg-teal-500 group-hover:text-white dark:group-hover:text-gray-950 transition-colors">
+                  <Code size={28} />
+                </div>
+                <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-3 font-mono tracking-tight">Millisekunden-Engineering</h3>
+                <p className="text-gray-600 dark:text-gray-400 leading-relaxed">
+                  Keine Baukästen wie WordPress. Durch Maßanfertigungen in React drücken wir Ihre Ladezeiten unter 0.5s und sichern Top-Rankings.
+                </p>
+              </motion.div>
+
+              <motion.div whileHover={{ y: -5 }} className="bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-800 p-8 rounded-none relative group transition-colors duration-500 shadow-[4px_4px_0px_rgba(0,0,0,0.05)] dark:shadow-[4px_4px_0px_rgba(0,0,0,0.3)] hover:shadow-[8px_8px_0px_rgba(20,184,166,0.2)]">
+                <div className="w-14 h-14 bg-teal-100 dark:bg-teal-500/10 rounded-none flex items-center justify-center text-teal-600 dark:text-teal-400 mb-6 border border-teal-200 dark:border-teal-500/20 group-hover:bg-teal-500 group-hover:text-white dark:group-hover:text-gray-950 transition-colors">
                   <Target size={28} />
                 </div>
-                <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-3">Maximale Conversion</h3>
+                <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-3 font-mono tracking-tight">Psychologisches Interface</h3>
                 <p className="text-gray-600 dark:text-gray-400 leading-relaxed">
-                  Jedes Element auf Ihrer neuen Seite wird psychologisch darauf optimiert, Besucher zu Aktionen zu bewegen. Mehr Anfragen bei gleichem Traffic.
-                </p>
-              </motion.div>
-
-              <motion.div whileHover={{ y: -5 }} className="bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-800 p-8 rounded-2xl relative overflow-hidden group transition-colors duration-500">
-                <div className="w-14 h-14 bg-teal-100 dark:bg-teal-500/10 rounded-xl flex items-center justify-center text-teal-600 dark:text-teal-400 mb-6 border border-teal-200 dark:border-teal-500/20 group-hover:bg-teal-500 group-hover:text-white dark:group-hover:text-gray-950 transition-colors">
-                  <Rocket size={28} />
-                </div>
-                <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-3">Blitzschnelle Ladezeiten</h3>
-                <p className="text-gray-600 dark:text-gray-400 leading-relaxed">
-                  Amazon fand heraus: 0,1s längere Ladezeit = 1% weniger Umsatz. Wir bauen High-Speed-Seiten, die Kunden und Google gleichermaßen lieben.
-                </p>
-              </motion.div>
-
-              <motion.div whileHover={{ y: -5 }} className="bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-800 p-8 rounded-2xl relative overflow-hidden group transition-colors duration-500">
-                <div className="w-14 h-14 bg-teal-100 dark:bg-teal-500/10 rounded-xl flex items-center justify-center text-teal-600 dark:text-teal-400 mb-6 border border-teal-200 dark:border-teal-500/20 group-hover:bg-teal-500 group-hover:text-white dark:group-hover:text-gray-950 transition-colors">
-                  <ShieldCheck size={28} />
-                </div>
-                <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-3">Zukunftssichere Technik</h3>
-                <p className="text-gray-600 dark:text-gray-400 leading-relaxed">
-                  Kein Wartungs-Albtraum. Wir nutzen modernste Frameworks, die sicher vor Hackern sind, reibungslos laufen und mit Ihrem Unternehmen mitwachsen.
+                  Unsere Layouts folgen strengen Verhaltensmustern (F-Pattern). Wir reduzieren kognitive Last und führen das Auge direkt zur Conversion.
                 </p>
               </motion.div>
             </div>
@@ -522,29 +584,28 @@ export default function App() {
         {/* 4. Interactive Process Timeline */}
         <section id="prozess" className="py-24 px-6 lg:px-8 max-w-7xl mx-auto relative">
           <div className="text-center mb-16">
-            <h2 className="text-3xl md:text-5xl font-bold mb-4 text-gray-900 dark:text-white">Ihr Weg zum <span className="text-teal-500 dark:text-teal-400">Marktführer</span></h2>
+            <h2 className="text-3xl md:text-5xl font-bold mb-4 text-gray-900 dark:text-white uppercase tracking-tight">Der <span className="text-teal-500 dark:text-teal-400">Conversion-First</span>-Prozess</h2>
             <p className="text-gray-600 dark:text-gray-400 max-w-2xl mx-auto text-lg">
-              Ein erprobter, transparenter Prozess, der Risiken minimiert und Ergebnisse maximiert.
+              Kein Standard 1-2-3-Ablauf. Eine ingenieurmäßige Herangehensweise an Ihr Webdesign.
             </p>
           </div>
 
           <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
             {[
-              { icon: <Users size={28} />, title: "1. Potenzialanalyse", desc: "Wir decken auf, wo Sie aktuell Umsatz liegen lassen und definieren die exakte Strategie." },
-              { icon: <PenTool size={28} />, title: "2. UX-Design", desc: "Entwicklung von Premium-Designs, die das Vertrauen Ihrer Zielgruppe sofort gewinnen." },
-              { icon: <Code size={28} />, title: "3. Entwicklung", desc: "Programmierung nach höchsten Standards. Schnell, sicher und SEO-optimiert." },
-              { icon: <TrendingUp size={28} />, title: "4. Skalierung", desc: "Erfolgreicher Launch. Ab Tag 1 generiert Ihre neue Präsenz mehr qualifizierte Leads." }
+              { icon: <Target size={28} />, title: "01. Das Audit", desc: "Wir sezieren Ihr Setup. Wir identifizieren den stärksten Drop-off-Point und liefern eine schonungslose Einschätzung." },
+              { icon: <PenTool size={28} />, title: "02. Der Prototyp", desc: "Ein reines Struktur-Wireframe. Keine Farben, nur die nackte Architektur und Logik, wie Ihr Besucher zum Käufer wird." },
+              { icon: <Code size={28} />, title: "03. High-Performance", desc: "Programmierung der Maßanfertigung. Headless-CMS, Mobile-First und Code, der auf 99+ Lighthouse Scores trimmt." },
+              { icon: <TrendingUp size={28} />, title: "04. Data & Iteration", desc: "Nach dem Launch messen wir harte KPIs (CPL, Bounce Rate) und iterieren das Design basierend auf echten Nutzerdaten." }
             ].map((step, i) => (
               <motion.div 
                 key={i}
-                whileHover={{ y: -10, scale: 1.02 }}
-                className="bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 p-8 rounded-2xl relative overflow-hidden group transition-all duration-500 shadow-sm dark:shadow-none"
+                whileHover={{ y: -5 }}
+                className="bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 p-8 rounded-none relative overflow-hidden group transition-all duration-300 shadow-[4px_4px_0px_rgba(0,0,0,0.05)] dark:shadow-[4px_4px_0px_rgba(0,0,0,0.3)] hover:shadow-[8px_8px_0px_rgba(20,184,166,0.2)]"
               >
-                <div className="absolute top-0 right-0 w-24 h-24 bg-teal-50 dark:bg-teal-500/5 rounded-bl-full transition-transform group-hover:scale-150 group-hover:bg-teal-100 dark:group-hover:bg-teal-500/10"></div>
-                <div className="w-14 h-14 bg-gray-50 dark:bg-gray-950 border border-gray-200 dark:border-gray-800 rounded-xl flex items-center justify-center text-teal-600 dark:text-teal-400 mb-6 group-hover:border-teal-300 dark:group-hover:border-teal-500/50 group-hover:shadow-[0_0_15px_rgba(45,212,191,0.2)] transition-all">
+                <div className="w-14 h-14 bg-gray-50 dark:bg-gray-950 border border-gray-200 dark:border-gray-800 flex items-center justify-center text-teal-600 dark:text-teal-400 mb-6 transition-all group-hover:bg-teal-500 group-hover:text-gray-950 group-hover:border-teal-500">
                   {step.icon}
                 </div>
-                <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-3">{step.title}</h3>
+                <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-3 font-mono tracking-tight">{step.title}</h3>
                 <p className="text-gray-600 dark:text-gray-400 text-sm leading-relaxed">{step.desc}</p>
               </motion.div>
             ))}
@@ -560,35 +621,35 @@ export default function App() {
 
             <div className="grid md:grid-cols-2 gap-8">
               {/* Testimonial 1 */}
-              <div className="bg-white dark:bg-gray-950 p-8 rounded-2xl border border-gray-200 dark:border-gray-800 shadow-sm dark:shadow-none transition-colors duration-500">
-                <div className="flex gap-1 text-teal-500 dark:text-teal-400 mb-6">
-                  {[1,2,3,4,5].map(star => <Star key={star} size={18} fill="currentColor" />)}
+              <div className="bg-white dark:bg-gray-950 p-8 border border-gray-200 dark:border-gray-800 shadow-[4px_4px_0px_rgba(0,0,0,0.05)] dark:shadow-[4px_4px_0px_rgba(0,0,0,0.3)] transition-colors duration-500">
+                <div className="mb-6 border-l-4 border-teal-500 pl-4">
+                  <h4 className="font-bold text-xl text-gray-900 dark:text-white tracking-tight">"Unsere Cost-per-Lead hat sich halbiert."</h4>
                 </div>
-                <p className="text-lg text-gray-700 dark:text-gray-300 mb-8 italic">"Seit dem Relaunch mit NexoraStudios haben sich unsere qualifizierten Anfragen verdreifacht. Das Design strahlt genau die Professionalität aus, die wir für unsere B2B-Kunden brauchen. Eine Investition, die sich in Rekordzeit amortisiert hat."</p>
+                <p className="text-lg text-gray-700 dark:text-gray-300 mb-8 font-medium">"Als IT-Dienstleister hatten wir Traffic, aber extrem wenig Anfragen. Nexora hat die Informationsarchitektur unserer Angebotsseiten komplett verändert. Die Ladezeit fiel von 3.4s auf 0.6s. Innerhalb von 3 Monaten stiegen unsere qualifizierten Leads um 140%, während unsere Google-Ads-Kosten pro Lead um 50% gesunken sind."</p>
                 <div className="flex items-center gap-4">
-                  <div className="w-12 h-12 rounded-full border border-gray-300 dark:border-gray-700 bg-gray-200 dark:bg-gray-800 flex items-center justify-center font-bold text-gray-600 dark:text-gray-300">
-                    TL
+                  <div className="w-12 h-12 border border-gray-300 dark:border-gray-700 bg-gray-200 dark:bg-gray-800 flex items-center justify-center font-bold text-gray-600 dark:text-gray-300 font-mono">
+                    MS
                   </div>
                   <div>
-                    <p className="font-bold text-gray-900 dark:text-white">Thomas L.</p>
-                    <p className="text-sm text-gray-500">Geschäftsführer, IndustrieTech GmbH</p>
+                    <p className="font-bold text-gray-900 dark:text-white">Michael S.</p>
+                    <p className="text-sm text-gray-500 font-mono">CEO, DataTech Solutions</p>
                   </div>
                 </div>
               </div>
 
               {/* Testimonial 2 */}
-              <div className="bg-white dark:bg-gray-950 p-8 rounded-2xl border border-gray-200 dark:border-gray-800 shadow-sm dark:shadow-none transition-colors duration-500">
-                <div className="flex gap-1 text-teal-500 dark:text-teal-400 mb-6">
-                  {[1,2,3,4,5].map(star => <Star key={star} size={18} fill="currentColor" />)}
+              <div className="bg-white dark:bg-gray-950 p-8 border border-gray-200 dark:border-gray-800 shadow-[4px_4px_0px_rgba(0,0,0,0.05)] dark:shadow-[4px_4px_0px_rgba(0,0,0,0.3)] transition-colors duration-500">
+                <div className="mb-6 border-l-4 border-teal-500 pl-4">
+                  <h4 className="font-bold text-xl text-gray-900 dark:text-white tracking-tight">"Endlich verstehen die Kunden in 3 Sekunden, was wir tun."</h4>
                 </div>
-                <p className="text-lg text-gray-700 dark:text-gray-300 mb-8 italic">"Wir hatten große Probleme mit unserer Sichtbarkeit. Die neue Architektur lädt so schnell, dass wir im Google-Ranking massiv gestiegen sind. Die Konkurrenzfähigkeit im E-Commerce ist endlich wieder gegeben."</p>
+                <p className="text-lg text-gray-700 dark:text-gray-300 mb-8 font-medium">"Unsere alte Seite war ein klassisches Agentur-Template voller Fachbegriffe. Das Nexora-Team hat unsere komplexe Dienstleistung so übersetzt, dass die Absprungrate sofort um 35% gesunken ist. Das Interface führt die Besucher jetzt logisch zum Beratungsgespräch. Eine Investition, die sich sofort rentiert hat."</p>
                 <div className="flex items-center gap-4">
-                  <div className="w-12 h-12 rounded-full border border-gray-300 dark:border-gray-700 bg-gray-200 dark:bg-gray-800 flex items-center justify-center font-bold text-gray-600 dark:text-gray-300">
-                    DK
+                  <div className="w-12 h-12 border border-gray-300 dark:border-gray-700 bg-gray-200 dark:bg-gray-800 flex items-center justify-center font-bold text-gray-600 dark:text-gray-300 font-mono">
+                    SK
                   </div>
                   <div>
-                    <p className="font-bold text-gray-900 dark:text-white">David K.</p>
-                    <p className="text-sm text-gray-500">Founder, ElevateEcom</p>
+                    <p className="font-bold text-gray-900 dark:text-white">Sarah K.</p>
+                    <p className="text-sm text-gray-500 font-mono">Head of Marketing, Industrieanlagen Müller</p>
                   </div>
                 </div>
               </div>
@@ -607,25 +668,37 @@ export default function App() {
           </div>
         </section>
 
+        {/* 5.5 Brand / Haltung */}
+        <section className="py-24 bg-gray-950 text-white border-t border-gray-800 relative overflow-hidden">
+          <div className="absolute top-0 right-0 w-96 h-96 bg-teal-500/10 rounded-full blur-[100px] pointer-events-none transform-gpu"></div>
+          <div className="max-w-4xl mx-auto px-6 lg:px-8 text-center relative z-10">
+            <h2 className="text-3xl md:text-5xl font-bold mb-8 uppercase tracking-tight text-white">Keine typische Agentur.<br /><span className="text-teal-400">Und darauf sind wir stolz.</span></h2>
+            <p className="text-lg text-gray-400 leading-relaxed mb-6 text-left md:text-center font-medium">
+              Wir haben NexoraStudios gegründet, weil wir es satt hatten, wie Webdesign heute oft funktioniert: Agenturen verkaufen hübsche Templates, werfen sie über den Zaun und lassen den Kunden mit der ausbleibenden Conversion allein.
+            </p>
+            <p className="text-lg text-gray-400 leading-relaxed text-left md:text-center font-medium">
+              Wir sind eine Taskforce aus Daten-Nerds, Verkaufspsychologen und Code-Puristen. Wir sprechen in Meetings weniger über "Vibes" und deutlich mehr über Cost-per-Acquisition, Render-Zeiten und Nutzerfluss. Wenn Sie jemanden suchen, der Ihnen einfach nur ein nettes Bild auf eine Standard-Seite klatscht, sind wir die Falschen. Wenn Sie Ihren digitalen Auftritt als kompromisslose, messbare Vertriebsmaschine aufbauen wollen – lassen Sie uns reden.
+            </p>
+          </div>
+        </section>
+
         {/* 6. Massive Conversion Footer (CTA) */}
-        <footer className="relative bg-teal-500 overflow-hidden">
+        <footer className="relative bg-teal-500 overflow-hidden border-t border-teal-600">
           {/* Background Patterns */}
           <div className="absolute inset-0 opacity-10 bg-[radial-gradient(circle_at_center,_var(--tw-gradient-stops))] from-black to-transparent"></div>
           <div className="absolute top-0 w-full h-px bg-gradient-to-r from-transparent via-white to-transparent opacity-30"></div>
           
           <div className="relative z-10 max-w-4xl mx-auto px-6 py-24 md:py-32 text-center">
-            <h2 className="text-3xl md:text-5xl lg:text-6xl font-extrabold text-gray-950 mb-6 tracking-tight">
-              Bereit für skalierbares Wachstum?
+            <h2 className="text-3xl md:text-5xl lg:text-6xl font-extrabold text-gray-950 mb-6 tracking-tight uppercase">
+              Zeit für messbare Ergebnisse.
             </h2>
             <p className="text-xl text-gray-900/80 mb-10 font-medium max-w-2xl mx-auto">
-              Finden Sie heraus, wie viel ungenutztes Potenzial in Ihrer aktuellen digitalen Präsenz steckt. Buchen Sie jetzt Ihre unverbindliche Analyse.
+              Lassen Sie uns herausfinden, warum Ihre aktuelle Seite nicht konvertiert – und wie wir das ändern.
             </p>
             
-            <button onClick={() => setIsModalOpen(true)} className="group relative inline-flex items-center justify-center bg-gray-950 text-white px-8 py-5 rounded-xl font-bold text-lg overflow-hidden transition-transform hover:scale-105 shadow-2xl">
-              <span className="absolute inset-0 w-full h-full bg-gradient-to-r from-gray-900 to-gray-800"></span>
-              <span className="absolute bottom-0 left-0 w-full h-1 bg-gradient-to-r from-teal-400 to-emerald-500 transform scale-x-0 group-hover:scale-x-100 transition-transform origin-left duration-300"></span>
-              <span className="relative flex items-center gap-2">
-                Kostenlose Potenzialanalyse sichern <span className="text-sm font-normal text-gray-400">(Wert 500€)</span>
+            <button onClick={() => setIsModalOpen(true)} className="group relative inline-flex items-center justify-center bg-gray-950 text-white px-8 py-5 rounded-none font-bold text-lg overflow-hidden transition-transform hover:-translate-y-1 hover:-translate-x-1 shadow-[6px_6px_0px_rgba(0,0,0,0.5)]">
+              <span className="relative flex items-center gap-3 font-mono tracking-tight">
+                Engpass-Analyse starten <ChevronRight size={20} className="text-teal-400" />
               </span>
             </button>
             
